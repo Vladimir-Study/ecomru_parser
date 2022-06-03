@@ -1,31 +1,32 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 url = 'https://www.wildberries.ru/catalog/18256273/detail.aspx?targetUrl=MI'
-EXE_PATH = 'chromedriver.exe'
 
 
 class SelectInSelenium():
 
-    def __init__(self, exe_path):
-        chrome_options = Options()
-        chrome_options.add_argument('--headless')
-        self.exe_path = exe_path
-        self.driver = webdriver.Chrome(executable_path=EXE_PATH, options=chrome_options)
+    def __init__(self):
+        # chrome_options = Options()
+        # chrome_options.add_argument('--headless')
+        # self.exe_path = exe_path
+        self.driver = webdriver.Chrome()
 
 
 class ParserWildberries(SelectInSelenium):
 
-    def __init__(self, url, exe_path):
-        super().__init__(exe_path)
+    def __init__(self, url):
+        # super().__init__(exe_path)
+        super().__init__()
         self.url = url
 
     def getting_page_code(self):
         self.driver.get(self.url)
-        photo_li = self.driver.find_element_by_xpath(".//div[@class='collapsable__content']")
-        # for elem in photo_li:
-        #     print(elem)
-        print(photo_li.text)
+        title = self.driver.find_element(By.CSS_SELECTOR, "h1")
+        print(title.text)
+        self.driver.close()
 
-parse_test = ParserWildberries(url, EXE_PATH)
+
+parse_test = ParserWildberries(url)
 parse_test.getting_page_code()
