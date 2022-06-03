@@ -1,32 +1,22 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+import requests
+import re
+from pprint36 import pprint
 
 url = 'https://www.wildberries.ru/catalog/18256273/detail.aspx?targetUrl=MI'
 
 
-class SelectInSelenium():
-
-    def __init__(self):
-        # chrome_options = Options()
-        # chrome_options.add_argument('--headless')
-        # self.exe_path = exe_path
-        self.driver = webdriver.Chrome()
-
-
-class ParserWildberries(SelectInSelenium):
+class ParserWildberries():
 
     def __init__(self, url):
-        # super().__init__(exe_path)
-        super().__init__()
         self.url = url
 
-    def getting_page_code(self):
-        self.driver.get(self.url)
-        title = self.driver.find_element(By.CSS_SELECTOR, "h1")
-        print(title.text)
-        self.driver.close()
+    def get_json(self):
+        product_number = re.search(r'\d+', self.url)
+        url_json = f'https://wbx-content-v2.wbstatic.net/ru/{product_number[0]}.json'
+        response = requests.get(url_json).json()
+        return response
 
 
-parse_test = ParserWildberries(url)
-parse_test.getting_page_code()
+if __name__ == '__main__':
+    product_test = ParserWildberries(url)
+    pprint(product_test.get_json())
